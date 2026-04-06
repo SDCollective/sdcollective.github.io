@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sports Data Collective — Reimagining Basketball Tournaments</title>
+  <meta name="description" content="SDC delivers instant real-time stats, live streaming, and AI-powered highlights for basketball tournaments. Built for organizers, coaches, and parents.">
+  <meta name="author" content="Sports Data Collective">
+  <meta property="og:title" content="Sports Data Collective">
+  <meta property="og:description" content="Reimagining the basketball tournament experience with real-time stats, live streaming, and AI highlights.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --background: hsl(220, 20%, 4%);
+      --foreground: hsl(210, 20%, 95%);
+      --card: hsl(220, 18%, 8%);
+      --card-foreground: hsl(210, 20%, 95%);
+      --primary: hsl(199, 89%, 48%);
+      --primary-foreground: hsl(220, 20%, 4%);
+      --muted: hsl(220, 14%, 12%);
+      --muted-foreground: hsl(215, 12%, 50%);
+      --border: hsl(220, 14%, 16%);
+      --ring: hsl(199, 89%, 48%);
+    }
+
+    html {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      min-height: 100vh;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Background image layer */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+    }
+
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.4;
+    }
+
+    .hero-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        hsla(220, 20%, 4%, 0.6),
+        hsla(220, 20%, 4%, 0.8),
+        hsl(220, 20%, 4%)
+      );
+    }
+
+    /* Radial glow overlay */
+    .hero-gradient {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        at 50% 0%,
+        rgba(13, 162, 231, 0.12) 0%,
+        transparent 60%
+      );
+    }
+
+    /* Content */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 56rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+
+    /* Coming Soon badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(13, 162, 231, 0.3);
+      background-color: rgba(13, 162, 231, 0.05);
+      margin-bottom: 2rem;
+    }
+
+    .badge-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background-color: var(--primary);
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .badge-text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Heading */
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, rgb(13, 162, 231), rgb(102, 207, 255));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+
+    .text-white {
+      color: var(--foreground);
+    }
+
+    /* Description */
+    .description {
+      font-size: 1.125rem;
+      color: var(--muted-foreground);
+      max-width: 42rem;
+      margin: 0 auto 3rem;
+      line-height: 1.75;
+    }
+
+    /* Feature pills */
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .feature-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.75rem;
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      box-shadow:
+        rgba(13, 162, 231, 0.3) 0px 0px 20px -5px,
+        rgba(13, 162, 231, 0.15) 0px 0px 60px -15px;
+    }
+
+    .feature-pill svg {
+      width: 1rem;
+      height: 1rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .feature-pill span {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--foreground);
+    }
+
+    /* Footer text */
+    .footer-text {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+    }
+
+    /* Site footer */
+    .site-footer {
+      padding: 1.5rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      background-color: var(--background);
+    }
+
+    .site-footer a {
+      font-size: 0.8125rem;
+      color: var(--muted-foreground);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .site-footer a:hover {
+      color: var(--foreground);
+    }
+
+    .site-footer .separator {
+      color: var(--border);
+      margin: 0 0.75rem;
+      font-size: 0.8125rem;
+    }
+
+    /* Responsive */
+    @media (min-width: 640px) {
+      h1 {
+        font-size: 3.75rem;
+      }
+      .description {
+        font-size: 1.25rem;
+      }
+    }
+
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 4.5rem;
+        letter-spacing: -1.8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <!-- Background image -->
+      <div class="hero-bg">
+        <img src="assets/hero-bg.jpg" alt="Futuristic basketball court with data visualization" width="1920" height="1080">
+        <div class="hero-bg-overlay"></div>
+      </div>
+
+      <!-- Radial glow -->
+      <div class="hero-gradient"></div>
+
+      <!-- Content -->
+      <div class="hero-content">
+        <!-- Coming Soon badge -->
+        <div class="badge">
+          <span class="badge-dot"></span>
+          <span class="badge-text">Coming Soon</span>
+        </div>
+
+        <!-- Title -->
+        <h1>
+          <span class="text-gradient">Sports Data</span><br>
+          <span class="text-white">Collective</span>
+        </h1>
+
+        <!-- Description -->
+        <p class="description">
+          Reimagining the basketball tournament experience with instant real-time
+          stats, live streaming, and AI-powered highlights. Built for organizers,
+          coaches, and parents.
+        </p>
+
+        <!-- Feature pills -->
+        <div class="features">
+          <div class="feature-pill">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
+            </svg>
+            <span>Real-Time Stats</span>
+          </div>
+          <div class="feature-pill">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path>
+              <rect x="2" y="6" width="14" height="12" rx="2"></rect>
+            </svg>
+            <span>Live Streaming</span>
+          </div>
+          <div class="feature-pill">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path>
+              <path d="M20 3v4"></path>
+              <path d="M22 5h-4"></path>
+              <path d="M4 17v2"></path>
+              <path d="M5 18H3"></path>
+            </svg>
+            <span>AI Highlights</span>
+          </div>
+        </div>
+
+        <!-- Footer text -->
+        <p class="footer-text">More information &amp; partnership opportunities coming soon.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a href="privacy_policy.html">Privacy Policy</a>
+    <span class="separator">|</span>
+    <a href="terms_of_service.html">Terms of Service</a>
+  </footer>
+</body>
+</html>
