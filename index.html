@@ -12,309 +12,1164 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --background: hsl(220, 20%, 4%);
+      --background-alt: hsl(220, 20%, 6%);
       --foreground: hsl(210, 20%, 95%);
       --card: hsl(220, 18%, 8%);
       --card-foreground: hsl(210, 20%, 95%);
       --primary: hsl(199, 89%, 48%);
+      --primary-light: hsl(199, 89%, 62%);
       --primary-foreground: hsl(220, 20%, 4%);
       --muted: hsl(220, 14%, 12%);
-      --muted-foreground: hsl(215, 12%, 50%);
+      --muted-foreground: hsl(215, 12%, 62%);
       --border: hsl(220, 14%, 16%);
+      --border-strong: hsl(220, 14%, 22%);
       --ring: hsl(199, 89%, 48%);
+      --success: hsl(152, 72%, 50%);
+      --warning: hsl(42, 96%, 60%);
+      --danger: hsl(0, 84%, 60%);
     }
 
-    html {
-      font-family: 'Inter', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+    html { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
+    body { background-color: var(--background); color: var(--foreground); min-height: 100vh; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    ul { list-style: none; }
+    img, svg { display: block; max-width: 100%; }
 
-    body {
-      background-color: var(--background);
-      color: var(--foreground);
-      min-height: 100vh;
-    }
+    .container { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; }
 
-    /* Hero Section */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+    /* ===== NAV ===== */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      backdrop-filter: blur(14px);
+      background: hsla(220, 20%, 4%, 0.72);
+      border-bottom: 1px solid var(--border);
     }
-
-    /* Background image layer */
-    .hero-bg {
-      position: absolute;
-      inset: 0;
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 4rem; }
+    .brand { display: flex; align-items: center; gap: 0.625rem; font-weight: 800; letter-spacing: -0.01em; }
+    .brand-mark {
+      width: 2rem; height: 2rem; border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: grid; place-items: center; color: var(--primary-foreground);
+      box-shadow: 0 0 24px -4px rgba(13, 162, 231, 0.55);
     }
+    .brand-mark svg { width: 1.1rem; height: 1.1rem; }
+    .brand-name { font-size: 1rem; }
+    .brand-name span { color: var(--primary); }
+    .nav-links { display: none; align-items: center; gap: 2rem; }
+    .nav-links a { font-size: 0.875rem; color: var(--muted-foreground); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--foreground); }
+    .nav-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.1rem; border-radius: 0.625rem;
+      background: var(--primary); color: var(--primary-foreground); font-weight: 600; font-size: 0.875rem;
+      box-shadow: 0 0 30px -8px rgba(13, 162, 231, 0.6); transition: transform 0.2s, box-shadow 0.2s; }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 36px -6px rgba(13, 162, 231, 0.8); }
+    @media (min-width: 768px) { .nav-links { display: flex; } }
 
-    .hero-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.4;
-    }
+    /* ===== HERO ===== */
+    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; padding-top: 4rem; }
+    .hero-bg { position: absolute; inset: 0; }
+    .hero-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.35; }
+    .hero-bg-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, hsla(220,20%,4%,0.6), hsla(220,20%,4%,0.85), hsl(220,20%,4%)); }
+    .hero-gradient { position: absolute; inset: 0; background: radial-gradient(at 50% 0%, rgba(13,162,231,0.14) 0%, transparent 60%); }
+    .hero-content { position: relative; z-index: 10; max-width: 58rem; margin: 0 auto; padding: 4rem 1.5rem; text-align: center; }
+    .badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 9999px;
+      border: 1px solid rgba(13,162,231,0.3); background: rgba(13,162,231,0.06); margin-bottom: 2rem; }
+    .badge-dot { width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: var(--primary);
+      animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+    .badge-text { font-size: 0.8125rem; font-weight: 600; color: var(--primary); letter-spacing: 0.02em; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
 
-    .hero-bg-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        hsla(220, 20%, 4%, 0.6),
-        hsla(220, 20%, 4%, 0.8),
-        hsl(220, 20%, 4%)
-      );
-    }
+    h1 { font-size: 3rem; font-weight: 900; letter-spacing: -0.03em; line-height: 1.03; margin-bottom: 1.5rem; }
+    .text-gradient { background: linear-gradient(135deg, rgb(13,162,231), rgb(128,220,255)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+    .text-white { color: var(--foreground); }
 
-    /* Radial glow overlay */
-    .hero-gradient {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(
-        at 50% 0%,
-        rgba(13, 162, 231, 0.12) 0%,
-        transparent 60%
-      );
-    }
+    .hero p.description { font-size: 1.125rem; color: var(--muted-foreground); max-width: 42rem; margin: 0 auto 2.5rem; line-height: 1.7; }
+    .features { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.875rem; margin-bottom: 2.5rem; }
+    .feature-pill { display: flex; align-items: center; gap: 0.625rem; padding: 0.75rem 1.25rem; border-radius: 0.75rem;
+      background: var(--card); border: 1px solid var(--border);
+      box-shadow: rgba(13,162,231,0.28) 0 0 20px -5px, rgba(13,162,231,0.14) 0 0 60px -15px; }
+    .feature-pill svg { width: 1rem; height: 1rem; color: var(--primary); flex-shrink: 0; }
+    .feature-pill span { font-size: 0.875rem; font-weight: 600; color: var(--foreground); }
 
-    /* Content */
-    .hero-content {
-      position: relative;
-      z-index: 10;
-      max-width: 56rem;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      text-align: center;
-    }
+    .hero-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 3rem; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.4rem; border-radius: 0.75rem; font-weight: 600; font-size: 0.95rem; transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s; }
+    .btn-primary { background: var(--primary); color: var(--primary-foreground); box-shadow: 0 0 40px -10px rgba(13,162,231,0.7); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 50px -6px rgba(13,162,231,0.9); }
+    .btn-ghost { background: transparent; color: var(--foreground); border: 1px solid var(--border-strong); }
+    .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+    .btn svg { width: 1rem; height: 1rem; }
 
-    /* Coming Soon badge */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 9999px;
-      border: 1px solid rgba(13, 162, 231, 0.3);
-      background-color: rgba(13, 162, 231, 0.05);
-      margin-bottom: 2rem;
-    }
+    .scroll-cue { display: inline-flex; color: var(--muted-foreground); animation: bounce 2.2s infinite; }
+    .scroll-cue svg { width: 1.25rem; height: 1.25rem; }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 
-    .badge-dot {
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: 9999px;
-      background-color: var(--primary);
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
+    /* ===== SECTION BASE ===== */
+    section { position: relative; }
+    .section-pad { padding: 6rem 0; }
+    .section-header { text-align: center; max-width: 42rem; margin: 0 auto 3.5rem; }
+    .eyebrow { display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.875rem; }
+    h2 { font-size: 2.25rem; font-weight: 900; letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 1rem; }
+    h3 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+    .lead { font-size: 1.0625rem; color: var(--muted-foreground); line-height: 1.7; }
 
-    .badge-text {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--primary);
-    }
+    /* ===== MARQUEE ===== */
+    .marquee-section { padding: 3rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--background-alt); }
+    .marquee { display: flex; overflow: hidden; mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); }
+    .marquee + .marquee { margin-top: 1rem; }
+    .marquee-track { display: flex; flex-shrink: 0; gap: 2.5rem; padding-right: 2.5rem; animation: scroll-left 40s linear infinite; white-space: nowrap; }
+    .marquee-reverse .marquee-track { animation: scroll-right 46s linear infinite; }
+    .marquee-track span { font-size: 1.5rem; font-weight: 800; color: var(--foreground); letter-spacing: -0.01em; }
+    .marquee-track span.dim { color: var(--muted-foreground); }
+    .marquee-track .dot { color: var(--primary); }
+    @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes scroll-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
+    /* ===== LIVE STATS DEMO ===== */
+    .demo-card { background: var(--card); border: 1px solid var(--border); border-radius: 1.25rem; overflow: hidden;
+      box-shadow: 0 40px 100px -30px rgba(13,162,231,0.35), 0 0 0 1px rgba(13,162,231,0.08); }
+    .demo-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--background-alt); }
+    .demo-title-row { display: flex; align-items: center; gap: 1rem; }
+    .demo-title-row h3 { font-size: 1rem; }
+    .demo-meta { display: flex; align-items: center; gap: 0.75rem; font-size: 0.8125rem; color: var(--muted-foreground); }
+    .live-tag { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: 9999px; background: rgba(239, 68, 68, 0.12); color: #fb7185; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; }
+    .live-tag::before { content: ""; width: 0.4rem; height: 0.4rem; border-radius: 9999px; background: #fb7185; animation: pulse 1.4s infinite; }
+    .icon-btn { width: 2.25rem; height: 2.25rem; border-radius: 0.5rem; border: 1px solid var(--border); display: inline-grid; place-items: center; color: var(--muted-foreground); transition: color 0.2s, border-color 0.2s; }
+    .icon-btn:hover { color: var(--primary); border-color: var(--primary); }
+    .icon-btn svg { width: 1rem; height: 1rem; }
 
-    /* Heading */
-    h1 {
-      font-size: 3rem;
-      font-weight: 900;
-      letter-spacing: -0.025em;
-      line-height: 1.05;
-      margin-bottom: 1.5rem;
-    }
+    .scoreboard { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+    .team-score { padding: 1.75rem 1.5rem; background: var(--card); display: flex; align-items: center; justify-content: space-between; }
+    .team-score .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-foreground); }
+    .team-score .team-name { font-size: 1.125rem; font-weight: 700; margin-top: 0.25rem; }
+    .team-score .score { font-size: 2.75rem; font-weight: 900; color: var(--primary); font-variant-numeric: tabular-nums; }
 
-    .text-gradient {
-      background: linear-gradient(135deg, rgb(13, 162, 231), rgb(102, 207, 255));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-    }
+    .leaders { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--border); }
+    @media (min-width: 768px) { .leaders { grid-template-columns: 1fr 1fr; } }
+    .leaders-col { background: var(--card); padding: 1.25rem 1.5rem; }
+    .leaders-col h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-foreground); margin-bottom: 1rem; }
+    .player { display: grid; grid-template-columns: 2.25rem 1fr auto; gap: 0.75rem; align-items: center; padding: 0.75rem 0; border-top: 1px solid var(--border); }
+    .player:first-of-type { border-top: 0; }
+    .player .num { font-size: 0.75rem; font-weight: 700; color: var(--muted-foreground); background: var(--muted); padding: 0.375rem 0.5rem; border-radius: 0.375rem; text-align: center; }
+    .player .pname { font-size: 0.875rem; font-weight: 600; }
+    .stat-grid { display: flex; gap: 0.875rem; }
+    .stat-grid div { display: flex; flex-direction: column; align-items: center; min-width: 2rem; }
+    .stat-grid .k { font-size: 0.625rem; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.08em; }
+    .stat-grid .v { font-size: 0.95rem; font-weight: 800; color: var(--foreground); font-variant-numeric: tabular-nums; }
+    .stat-grid .up { color: var(--success); }
 
-    .text-white {
-      color: var(--foreground);
-    }
+    .demo-intro { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 2.5rem; }
+    .demo-tag { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.875rem; border-radius: 9999px; background: rgba(13,162,231,0.08); border: 1px solid rgba(13,162,231,0.25); color: var(--primary); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .demo-tag svg { width: 0.9rem; height: 0.9rem; }
 
-    /* Description */
-    .description {
-      font-size: 1.125rem;
-      color: var(--muted-foreground);
-      max-width: 42rem;
-      margin: 0 auto 3rem;
-      line-height: 1.75;
-    }
+    /* ===== BRACKET ===== */
+    .bracket-section { background: var(--background-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .bracket-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; padding: 1rem 1.25rem; background: var(--card); border: 1px solid var(--border); border-radius: 0.875rem; }
+    .bracket-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.8125rem; color: var(--muted-foreground); }
+    .bracket-filters .chip { padding: 0.375rem 0.75rem; border-radius: 9999px; background: var(--muted); }
+    .bracket-filters .chip.active { background: var(--primary); color: var(--primary-foreground); font-weight: 700; }
+    .bracket { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .bracket { grid-template-columns: 1.1fr 1fr 1fr; align-items: center; } }
+    .bracket-col h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted-foreground); margin-bottom: 1rem; text-align: center; }
+    .match { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem 1.1rem; margin-bottom: 1rem; transition: border-color 0.2s, transform 0.2s; }
+    .match:hover { border-color: var(--primary); transform: translateY(-1px); }
+    .match-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .match-top h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-foreground); }
+    .status-pill { font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .status-completed { background: rgba(34,197,94,0.12); color: #4ade80; }
+    .status-upcoming { background: rgba(13,162,231,0.12); color: var(--primary); }
+    .status-inprogress { background: rgba(250,204,21,0.12); color: #facc15; }
+    .team-row { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0; font-size: 0.9rem; }
+    .team-row + .team-row { border-top: 1px dashed var(--border); }
+    .team-row .seed { font-size: 0.68rem; color: var(--muted-foreground); background: var(--muted); padding: 0.2rem 0.4rem; border-radius: 0.25rem; margin-right: 0.625rem; }
+    .team-row .tname { font-weight: 600; flex: 1; }
+    .team-row.win .tname { color: var(--primary); }
+    .team-row .pts { font-weight: 800; font-variant-numeric: tabular-nums; }
+    .match-foot { display: flex; gap: 1rem; margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid var(--border); font-size: 0.72rem; color: var(--muted-foreground); }
+    .match-foot span { display: inline-flex; align-items: center; gap: 0.35rem; }
+    .match-foot svg { width: 0.8rem; height: 0.8rem; }
 
-    /* Feature pills */
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 3rem;
-    }
+    .championship { background: linear-gradient(160deg, rgba(13,162,231,0.14), rgba(13,162,231,0.03)); border: 1px solid rgba(13,162,231,0.35); border-radius: 1rem; padding: 1.5rem; box-shadow: 0 0 60px -20px rgba(13,162,231,0.4); }
+    .championship h3 { text-align: center; margin-bottom: 0.5rem; color: var(--primary); font-size: 0.8rem; }
+    .championship .sub { text-align: center; font-size: 0.8125rem; color: var(--muted-foreground); margin-bottom: 1rem; }
+    .championship .match { background: var(--background-alt); border-color: rgba(13,162,231,0.35); margin-bottom: 0; }
 
-    .feature-pill {
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.75rem;
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      box-shadow:
-        rgba(13, 162, 231, 0.3) 0px 0px 20px -5px,
-        rgba(13, 162, 231, 0.15) 0px 0px 60px -15px;
-    }
+    /* ===== TIMELINE ===== */
+    .timeline { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .timeline { grid-template-columns: repeat(4, 1fr); } }
+    .milestone { background: var(--card); border: 1px solid var(--border); border-radius: 0.875rem; padding: 1.5rem; position: relative; }
+    .milestone .icon { width: 2.5rem; height: 2.5rem; border-radius: 0.625rem; background: rgba(13,162,231,0.12); color: var(--primary); display: grid; place-items: center; margin-bottom: 1rem; }
+    .milestone .icon svg { width: 1.1rem; height: 1.1rem; }
+    .milestone h3 { font-size: 1rem; margin-bottom: 0.375rem; }
+    .milestone .when { display: flex; align-items: center; gap: 0.375rem; font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 0.625rem; }
+    .milestone .when svg { width: 0.85rem; height: 0.85rem; }
+    .milestone p { font-size: 0.85rem; color: var(--muted-foreground); line-height: 1.55; }
 
-    .feature-pill svg {
-      width: 1rem;
-      height: 1rem;
-      color: var(--primary);
-      flex-shrink: 0;
-    }
+    /* ===== COMPARE ===== */
+    .compare-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.75rem; }
+    .compare-selectors { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-bottom: 1.5rem; }
+    @media (min-width: 640px) { .compare-selectors { grid-template-columns: 1fr 1fr; } }
+    .select { background: var(--background-alt); border: 1px solid var(--border); padding: 0.75rem 1rem; border-radius: 0.625rem; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; justify-content: space-between; color: var(--foreground); }
+    .select small { display: block; font-size: 0.65rem; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 0.2rem; }
+    .compare-row { padding: 1rem 0; border-top: 1px solid var(--border); }
+    .compare-row:first-child { border-top: 0; }
+    .compare-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem; }
+    .compare-head .metric { font-size: 0.8125rem; color: var(--muted-foreground); }
+    .compare-head .delta { font-size: 0.8125rem; font-weight: 700; }
+    .delta.up { color: var(--success); }
+    .delta.down { color: var(--danger); }
+    .bar-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .bar { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background: var(--background-alt); border: 1px solid var(--border); border-radius: 0.5rem; font-size: 0.85rem; font-weight: 700; }
+    .bar span:first-child { color: var(--muted-foreground); font-weight: 500; font-size: 0.78rem; }
 
-    .feature-pill span {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--foreground);
-    }
+    /* ===== STREAMING ===== */
+    .stream-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .stream-grid { grid-template-columns: 1.2fr 1fr; } }
+    .stream-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; overflow: hidden; }
+    .video-mock { position: relative; aspect-ratio: 16/9; background: radial-gradient(ellipse at center, #1a2540 0%, #050810 80%); display: grid; place-items: center; }
+    .play-btn { width: 5rem; height: 5rem; border-radius: 9999px; background: rgba(13,162,231,0.95); color: var(--primary-foreground); display: grid; place-items: center; box-shadow: 0 0 50px rgba(13,162,231,0.6); transition: transform 0.2s; }
+    .play-btn:hover { transform: scale(1.05); }
+    .play-btn svg { width: 1.75rem; height: 1.75rem; }
+    .video-live { position: absolute; top: 1rem; left: 1rem; }
+    .video-caption { position: absolute; left: 1rem; bottom: 1rem; right: 1rem; color: var(--foreground); }
+    .video-caption h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .video-caption p { font-size: 0.8125rem; color: var(--muted-foreground); }
+    .stream-body { padding: 1.5rem; }
+    .stream-body h3 { margin-bottom: 0.625rem; }
+    .stream-body p { font-size: 0.9rem; color: var(--muted-foreground); line-height: 1.6; margin-bottom: 1rem; }
+    .stream-actions { display: flex; gap: 0.625rem; }
+    .btn-sm { padding: 0.55rem 0.9rem; font-size: 0.8125rem; border-radius: 0.5rem; }
 
-    /* Footer text */
-    .footer-text {
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
-    }
+    .highlights-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem; }
+    .highlights-card h3 { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .highlights-card h3 svg { width: 1.1rem; height: 1.1rem; color: var(--primary); }
+    .highlight-list { display: grid; gap: 0.75rem; }
+    .highlight { display: grid; grid-template-columns: 4.25rem 1fr auto; gap: 0.875rem; align-items: center; padding: 0.625rem; background: var(--background-alt); border: 1px solid var(--border); border-radius: 0.625rem; }
+    .highlight .thumb { aspect-ratio: 16/10; background: linear-gradient(135deg, #14233e, #040810); border-radius: 0.375rem; position: relative; overflow: hidden; }
+    .highlight .thumb::after { content: "▶"; position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,0.7); font-size: 0.7rem; }
+    .highlight h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.125rem; }
+    .highlight .meta { font-size: 0.7rem; color: var(--muted-foreground); }
+    .highlight .dur { font-size: 0.72rem; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
 
-    /* Site footer */
-    .site-footer {
-      padding: 1.5rem;
-      text-align: center;
-      border-top: 1px solid var(--border);
-      background-color: var(--background);
-    }
+    /* ===== FEATURE GRID (audience sections) ===== */
+    .audience-section { padding: 6rem 0; }
+    .audience-section + .audience-section { border-top: 1px solid var(--border); }
+    .feat-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .feat-grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 960px) { .feat-grid { grid-template-columns: 1fr 1fr 1fr; } }
+    .feat-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
+    .feat-card:hover { transform: translateY(-2px); border-color: rgba(13,162,231,0.4); box-shadow: 0 30px 60px -30px rgba(13,162,231,0.3); }
+    .feat-card .icon { width: 2.5rem; height: 2.5rem; border-radius: 0.625rem; background: rgba(13,162,231,0.1); color: var(--primary); display: grid; place-items: center; margin-bottom: 1rem; }
+    .feat-card .icon svg { width: 1.15rem; height: 1.15rem; }
+    .feat-card h3 { font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .feat-card p { font-size: 0.875rem; color: var(--muted-foreground); line-height: 1.6; }
 
-    .site-footer a {
-      font-size: 0.8125rem;
-      color: var(--muted-foreground);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
+    /* ===== SPOTLIGHT PANELS ===== */
+    .spotlight { display: grid; gap: 2rem; grid-template-columns: 1fr; margin-top: 3rem; align-items: center; }
+    @media (min-width: 900px) { .spotlight { grid-template-columns: 1.05fr 1fr; } }
+    .spotlight-body h3 { font-size: 1.5rem; margin-bottom: 0.875rem; }
+    .spotlight-body p { color: var(--muted-foreground); line-height: 1.7; margin-bottom: 1.25rem; }
+    .check-list li { display: flex; align-items: flex-start; gap: 0.625rem; padding: 0.375rem 0; font-size: 0.9rem; color: var(--foreground); }
+    .check-list li::before { content: ""; flex-shrink: 0; width: 1.1rem; height: 1.1rem; margin-top: 0.1rem; border-radius: 9999px; background: rgba(13,162,231,0.15) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230da2e7' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") center/0.75rem no-repeat; }
 
-    .site-footer a:hover {
-      color: var(--foreground);
-    }
+    .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem; }
+    .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .kpi { background: var(--background-alt); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem 1.25rem; }
+    .kpi .k { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-foreground); }
+    .kpi .v { font-size: 1.75rem; font-weight: 900; margin-top: 0.25rem; color: var(--foreground); font-variant-numeric: tabular-nums; }
+    .kpi .v.accent { color: var(--primary); }
 
-    .site-footer .separator {
-      color: var(--border);
-      margin: 0 0.75rem;
-      font-size: 0.8125rem;
-    }
+    .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem; }
+    .chart-card h3 { font-size: 1rem; margin-bottom: 1rem; }
+    .chart { height: 180px; display: flex; align-items: flex-end; gap: 0.75rem; padding: 0 0.5rem; border-bottom: 1px solid var(--border); }
+    .chart .bar-v { flex: 1; background: linear-gradient(to top, rgba(13,162,231,0.15), var(--primary)); border-radius: 0.375rem 0.375rem 0 0; position: relative; }
+    .chart-x { display: flex; justify-content: space-between; padding: 0.5rem 0.5rem 0; font-size: 0.7rem; color: var(--muted-foreground); }
 
-    /* Responsive */
+    .metric-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .metric-row .name { font-size: 0.82rem; color: var(--muted-foreground); }
+    .metric-row .val { font-size: 0.95rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .progress { height: 0.5rem; background: var(--muted); border-radius: 9999px; overflow: hidden; margin-bottom: 1.15rem; }
+    .progress > span { display: block; height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 9999px; }
+
+    /* ===== PHONE MOCKUP ===== */
+    .phone { width: 16rem; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 2rem; padding: 1rem; box-shadow: 0 40px 80px -30px rgba(13,162,231,0.4); }
+    .phone .screen { background: var(--background); border-radius: 1.25rem; padding: 1.25rem; }
+    .phone-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .phone-title .t { font-size: 0.72rem; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.08em; }
+    .phone-score { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+    .phone-team { padding: 0.75rem; background: var(--card); border: 1px solid var(--border); border-radius: 0.625rem; text-align: center; }
+    .phone-team .tn { font-size: 0.72rem; color: var(--muted-foreground); }
+    .phone-team .ts { font-size: 1.5rem; font-weight: 900; color: var(--primary); }
+    .phone-row { display: flex; justify-content: space-between; padding: 0.625rem 0; border-top: 1px solid var(--border); font-size: 0.75rem; }
+    .phone-row .v { color: var(--primary); font-weight: 700; }
+
+    /* ===== FINAL CTA ===== */
+    .final-cta { padding: 6rem 0; text-align: center; position: relative; overflow: hidden; }
+    .final-cta::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(13,162,231,0.14), transparent 60%); }
+    .final-cta .inner { position: relative; }
+    .final-cta h2 { max-width: 42rem; margin: 0 auto 1rem; }
+    .final-cta p { color: var(--muted-foreground); max-width: 36rem; margin: 0 auto 2rem; font-size: 1.05rem; }
+    .cta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+
+    /* ===== FOOTER ===== */
+    .site-footer { padding: 4rem 0 2rem; background: var(--background-alt); border-top: 1px solid var(--border); }
+    .footer-grid { display: grid; gap: 2.5rem; grid-template-columns: 1fr; margin-bottom: 2.5rem; }
+    @media (min-width: 720px) { .footer-grid { grid-template-columns: 1.5fr 1fr 1fr; } }
+    .footer-about p { color: var(--muted-foreground); font-size: 0.875rem; line-height: 1.65; max-width: 26rem; margin: 1rem 0; }
+    .footer-about a.email { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--primary); }
+    .footer-col h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--foreground); margin-bottom: 1rem; }
+    .footer-col li { padding: 0.3rem 0; }
+    .footer-col a { font-size: 0.85rem; color: var(--muted-foreground); transition: color 0.2s; }
+    .footer-col a:hover { color: var(--primary); }
+    .footer-bottom { padding-top: 2rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.8125rem; color: var(--muted-foreground); }
+    .footer-bottom .separator { color: var(--border-strong); margin: 0 0.75rem; }
+    .footer-bottom a:hover { color: var(--foreground); }
+
+    /* ===== RESPONSIVE TYPE ===== */
     @media (min-width: 640px) {
-      h1 {
-        font-size: 3.75rem;
-      }
-      .description {
-        font-size: 1.25rem;
-      }
+      h1 { font-size: 3.75rem; }
+      h2 { font-size: 2.75rem; }
+      .hero p.description { font-size: 1.25rem; }
     }
-
-    @media (min-width: 768px) {
-      h1 {
-        font-size: 4.5rem;
-        letter-spacing: -1.8px;
-      }
+    @media (min-width: 960px) {
+      h1 { font-size: 4.5rem; letter-spacing: -0.04em; }
+      h2 { font-size: 3rem; }
     }
   </style>
 </head>
 <body>
-  <main>
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="#top" class="brand">
+        <span class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>
+        </span>
+        <span class="brand-name">Sports Data <span>Collective</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#live-stats">Live Stats</a>
+        <a href="#streaming">Streaming</a>
+        <a href="#organizers">Organizers</a>
+      </div>
+      <a href="#cta" class="nav-cta">Get Started</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <!-- ===== HERO ===== -->
     <section class="hero">
-      <!-- Background image -->
       <div class="hero-bg">
         <img src="assets/hero-bg.jpg" alt="Futuristic basketball court with data visualization" width="1920" height="1080">
         <div class="hero-bg-overlay"></div>
       </div>
-
-      <!-- Radial glow -->
       <div class="hero-gradient"></div>
 
-      <!-- Content -->
       <div class="hero-content">
-        <!-- Coming Soon badge -->
         <div class="badge">
           <span class="badge-dot"></span>
-          <span class="badge-text">Coming Soon</span>
+          <span class="badge-text">Live Stats • Real-Time Updates • Instant Highlights</span>
         </div>
 
-        <!-- Title -->
         <h1>
-          <span class="text-gradient">Sports Data</span><br>
-          <span class="text-white">Collective</span>
+          <span class="text-white">Basketball Tournaments</span><br>
+          <span class="text-gradient">Reimagined</span>
         </h1>
 
-        <!-- Description -->
         <p class="description">
-          Reimagining the basketball tournament experience with instant real-time
-          stats, live streaming, and AI-powered highlights. Built for organizers,
-          coaches, and parents.
+          Experience tournaments like never before with instant real-time stats,
+          live streaming, and AI-powered highlights. Built for organizers, coaches,
+          and parents who expect more from game day.
         </p>
 
-        <!-- Feature pills -->
         <div class="features">
           <div class="feature-pill">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>
             <span>Real-Time Stats</span>
           </div>
           <div class="feature-pill">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path>
-              <rect x="2" y="6" width="14" height="12" rx="2"></rect>
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
             <span>Live Streaming</span>
           </div>
           <div class="feature-pill">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path>
-              <path d="M20 3v4"></path>
-              <path d="M22 5h-4"></path>
-              <path d="M4 17v2"></path>
-              <path d="M5 18H3"></path>
-            </svg>
-            <span>AI Highlights</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
+            <span>Instant Highlights</span>
           </div>
         </div>
 
-        <!-- Footer text -->
-        <p class="footer-text">More information &amp; partnership opportunities coming soon.</p>
+        <div class="hero-ctas">
+          <a href="mailto:info@sportsdatacollective.com" class="btn btn-primary">
+            Learn More
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <a href="#features" class="scroll-cue" aria-label="Scroll down">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== FEATURE HEADER + MARQUEE ===== -->
+    <section id="features" class="section-pad" style="padding-bottom: 0;">
+      <div class="container section-header">
+        <h2>Everything You Need for Modern Tournaments</h2>
+        <p class="lead">Powerful features designed to elevate the tournament experience for everyone involved.</p>
+      </div>
+    </section>
+
+    <section class="marquee-section">
+      <div class="marquee">
+        <div class="marquee-track" aria-hidden="true">
+          <span>Real-Time Stats</span><span class="dot">•</span>
+          <span class="dim">Live Streaming</span><span class="dot">•</span>
+          <span>Instant Highlights</span><span class="dot">•</span>
+          <span class="dim">Advanced Analytics</span><span class="dot">•</span>
+          <span>Tournament Brackets</span><span class="dot">•</span>
+          <span class="dim">Mobile Access</span><span class="dot">•</span>
+          <span>Lightning Fast</span><span class="dot">•</span>
+          <span class="dim">Team Management</span><span class="dot">•</span>
+          <span>Smart Scheduling</span><span class="dot">•</span>
+          <span class="dim">Performance Tracking</span><span class="dot">•</span>
+        </div>
+        <div class="marquee-track" aria-hidden="true">
+          <span>Real-Time Stats</span><span class="dot">•</span>
+          <span class="dim">Live Streaming</span><span class="dot">•</span>
+          <span>Instant Highlights</span><span class="dot">•</span>
+          <span class="dim">Advanced Analytics</span><span class="dot">•</span>
+          <span>Tournament Brackets</span><span class="dot">•</span>
+          <span class="dim">Mobile Access</span><span class="dot">•</span>
+          <span>Lightning Fast</span><span class="dot">•</span>
+          <span class="dim">Team Management</span><span class="dot">•</span>
+          <span>Smart Scheduling</span><span class="dot">•</span>
+          <span class="dim">Performance Tracking</span><span class="dot">•</span>
+        </div>
+      </div>
+      <div class="marquee marquee-reverse">
+        <div class="marquee-track" aria-hidden="true">
+          <span class="dim">Broadcast Overlays</span><span class="dot">•</span>
+          <span>Heat Maps</span><span class="dot">•</span>
+          <span class="dim">Shot Charts</span><span class="dot">•</span>
+          <span>Play-By-Play</span><span class="dot">•</span>
+          <span class="dim">Player Profiles</span><span class="dot">•</span>
+          <span>Social Sharing</span><span class="dot">•</span>
+          <span class="dim">Roster Sync</span><span class="dot">•</span>
+          <span>Multi-Court Support</span><span class="dot">•</span>
+          <span class="dim">Parent Notifications</span><span class="dot">•</span>
+          <span>Coach Tools</span><span class="dot">•</span>
+        </div>
+        <div class="marquee-track" aria-hidden="true">
+          <span class="dim">Broadcast Overlays</span><span class="dot">•</span>
+          <span>Heat Maps</span><span class="dot">•</span>
+          <span class="dim">Shot Charts</span><span class="dot">•</span>
+          <span>Play-By-Play</span><span class="dot">•</span>
+          <span class="dim">Player Profiles</span><span class="dot">•</span>
+          <span>Social Sharing</span><span class="dot">•</span>
+          <span class="dim">Roster Sync</span><span class="dot">•</span>
+          <span>Multi-Court Support</span><span class="dot">•</span>
+          <span class="dim">Parent Notifications</span><span class="dot">•</span>
+          <span>Coach Tools</span><span class="dot">•</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LIVE STATS DEMO ===== -->
+    <section id="live-stats" class="section-pad">
+      <div class="container">
+        <div class="demo-intro">
+          <div class="demo-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            LIVE DEMO
+          </div>
+          <h2>Real-Time Stats That<br><span class="text-gradient">Update Instantly</span></h2>
+          <p class="lead" style="max-width: 38rem; margin-top: 0.75rem;">Watch as scores, player stats, and game data update in real time. No refresh needed.</p>
+        </div>
+
+        <div class="demo-card">
+          <div class="demo-header">
+            <div class="demo-title-row">
+              <h3>Live Game Stats</h3>
+              <div class="demo-meta">
+                <span>Q1</span>
+                <span>9:32</span>
+                <span class="live-tag">LIVE</span>
+              </div>
+            </div>
+            <button class="icon-btn" aria-label="Pause">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+          </div>
+
+          <div class="scoreboard">
+            <div class="team-score">
+              <div>
+                <div class="label">Home Team</div>
+                <div class="team-name">Eagles</div>
+              </div>
+              <div class="score">42</div>
+            </div>
+            <div class="team-score">
+              <div>
+                <div class="label">Away Team</div>
+                <div class="team-name">Panthers</div>
+              </div>
+              <div class="score">38</div>
+            </div>
+          </div>
+
+          <div class="leaders">
+            <div class="leaders-col">
+              <h4>Home Team Leaders</h4>
+              <div class="player">
+                <div class="num">#23</div>
+                <div class="pname">Jordan Smith</div>
+                <div class="stat-grid">
+                  <div><div class="k">PTS</div><div class="v up">18</div></div>
+                  <div><div class="k">REB</div><div class="v">7</div></div>
+                  <div><div class="k">AST</div><div class="v">4</div></div>
+                </div>
+              </div>
+              <div class="player">
+                <div class="num">#5</div>
+                <div class="pname">Marcus Johnson</div>
+                <div class="stat-grid">
+                  <div><div class="k">PTS</div><div class="v up">12</div></div>
+                  <div><div class="k">REB</div><div class="v">5</div></div>
+                  <div><div class="k">AST</div><div class="v">8</div></div>
+                </div>
+              </div>
+              <div class="player">
+                <div class="num">#11</div>
+                <div class="pname">Chris Williams</div>
+                <div class="stat-grid">
+                  <div><div class="k">PTS</div><div class="v">9</div></div>
+                  <div><div class="k">REB</div><div class="v">3</div></div>
+                  <div><div class="k">AST</div><div class="v">2</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="leaders-col">
+              <h4>Away Team Leaders</h4>
+              <div class="player">
+                <div class="num">#7</div>
+                <div class="pname">Alex Davis</div>
+                <div class="stat-grid">
+                  <div><div class="k">PTS</div><div class="v up">15</div></div>
+                  <div><div class="k">REB</div><div class="v">6</div></div>
+                  <div><div class="k">AST</div><div class="v">5</div></div>
+                </div>
+              </div>
+              <div class="player">
+                <div class="num">#14</div>
+                <div class="pname">Ryan Brown</div>
+                <div class="stat-grid">
+                  <div><div class="k">PTS</div><div class="v up">10</div></div>
+                  <div><div class="k">REB</div><div class="v">4</div></div>
+                  <div><div class="k">AST</div><div class="v">3</div></div>
+                </div>
+              </div>
+              <div class="player">
+                <div class="num">#9</div>
+                <div class="pname">Tyler Wilson</div>
+                <div class="stat-grid">
+                  <div><div class="k">PTS</div><div class="v">9</div></div>
+                  <div><div class="k">REB</div><div class="v">8</div></div>
+                  <div><div class="k">AST</div><div class="v">1</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BRACKET ===== -->
+    <section class="bracket-section section-pad">
+      <div class="container">
+        <div class="section-header">
+          <div class="eyebrow">Tournament Bracket</div>
+          <h2>Follow Every Matchup From Tip-Off to Trophy</h2>
+          <p class="lead">Interactive brackets update automatically as games complete. Share progress with a single link.</p>
+        </div>
+
+        <div class="bracket-toolbar">
+          <div class="bracket-filters">
+            <span class="chip active">Live</span>
+            <span class="chip">Completed</span>
+            <span class="chip">Championship</span>
+          </div>
+          <div class="bracket-filters">
+            <span class="chip">—</span>
+            <span class="chip">Pinch / scroll to zoom</span>
+          </div>
+          <button class="btn btn-ghost btn-sm" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Bracket
+          </button>
+        </div>
+
+        <div class="bracket">
+          <div class="bracket-col">
+            <h3>Quarterfinals</h3>
+            <div class="match">
+              <div class="match-top"><h4>Quarterfinal</h4><span class="status-pill status-completed">Completed</span></div>
+              <div class="team-row win"><div><span class="seed">#1</span><span class="tname">Eagles</span></div><div class="pts">72</div></div>
+              <div class="team-row"><div><span class="seed">#8</span><span class="tname">Hawks</span></div><div class="pts">58</div></div>
+              <div class="match-foot">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Mar 14</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2:00 PM</span>
+              </div>
+            </div>
+            <div class="match">
+              <div class="match-top"><h4>Quarterfinal</h4><span class="status-pill status-completed">Completed</span></div>
+              <div class="team-row"><div><span class="seed">#4</span><span class="tname">Lions</span></div><div class="pts">65</div></div>
+              <div class="team-row win"><div><span class="seed">#5</span><span class="tname">Tigers</span></div><div class="pts">68</div></div>
+              <div class="match-foot">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Mar 14</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>4:00 PM</span>
+              </div>
+            </div>
+            <div class="match">
+              <div class="match-top"><h4>Quarterfinal</h4><span class="status-pill status-completed">Completed</span></div>
+              <div class="team-row win"><div><span class="seed">#3</span><span class="tname">Wolves</span></div><div class="pts">70</div></div>
+              <div class="team-row"><div><span class="seed">#6</span><span class="tname">Bears</span></div><div class="pts">64</div></div>
+              <div class="match-foot">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Mar 15</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2:00 PM</span>
+              </div>
+            </div>
+            <div class="match">
+              <div class="match-top"><h4>Quarterfinal</h4><span class="status-pill status-completed">Completed</span></div>
+              <div class="team-row win"><div><span class="seed">#2</span><span class="tname">Panthers</span></div><div class="pts">75</div></div>
+              <div class="team-row"><div><span class="seed">#7</span><span class="tname">Cougars</span></div><div class="pts">60</div></div>
+              <div class="match-foot">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Mar 15</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>4:00 PM</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bracket-col">
+            <h3>Semifinals</h3>
+            <div class="match">
+              <div class="match-top"><h4>Semifinal</h4><span class="status-pill status-upcoming">Upcoming</span></div>
+              <div class="team-row"><div><span class="seed">#1</span><span class="tname">Eagles</span></div><div class="pts">—</div></div>
+              <div class="team-row"><div><span class="seed">#5</span><span class="tname">Tigers</span></div><div class="pts">—</div></div>
+              <div class="match-foot">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Mar 19</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>3:00 PM</span>
+              </div>
+            </div>
+            <div class="match">
+              <div class="match-top"><h4>Semifinal</h4><span class="status-pill status-upcoming">Upcoming</span></div>
+              <div class="team-row"><div><span class="seed">#3</span><span class="tname">Wolves</span></div><div class="pts">—</div></div>
+              <div class="team-row"><div><span class="seed">#2</span><span class="tname">Panthers</span></div><div class="pts">—</div></div>
+              <div class="match-foot">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Mar 19</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>5:00 PM</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bracket-col">
+            <div class="championship">
+              <h3>★ CHAMPIONSHIP ★</h3>
+              <div class="sub">The Ultimate Showdown</div>
+              <div class="match">
+                <div class="match-top"><h4>Championship</h4><span class="status-pill status-upcoming">Upcoming</span></div>
+                <div class="team-row"><div><span class="seed">#1</span><span class="tname">Eagles</span></div><div class="pts">—</div></div>
+                <div class="team-row"><div><span class="seed">#2</span><span class="tname">Panthers</span></div><div class="pts">—</div></div>
+                <div class="match-foot">
+                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Mar 24</span>
+                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>7:00 PM</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TIMELINE ===== -->
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-header">
+          <div class="eyebrow">Tournament Timeline</div>
+          <h2>A Clear Path From Registration to Champion</h2>
+          <p class="lead">Every milestone tracked, every deadline visible, every update shared the moment it happens.</p>
+        </div>
+
+        <div class="timeline">
+          <div class="milestone">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <h3>Registration Opens</h3>
+            <div class="when">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              March 1, 2026
+            </div>
+            <p>Team registration period begins with automated roster verification.</p>
+          </div>
+          <div class="milestone">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 17 4-4 4 4 5-5"/></svg></div>
+            <h3>Bracket Released</h3>
+            <div class="when">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              March 10, 2026
+            </div>
+            <p>Tournament bracket and schedule announced to all teams and fans.</p>
+          </div>
+          <div class="milestone">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>
+            <h3>Tournament Games</h3>
+            <div class="when">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              March 15–24, 2026
+            </div>
+            <p>Quarterfinals and semifinals streamed live with real-time stats.</p>
+          </div>
+          <div class="milestone">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>
+            <h3>Championship Game</h3>
+            <div class="when">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              March 25, 2026
+            </div>
+            <p>Championship game at 7:00 PM — the final matchup of the bracket.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== COMPARE ===== -->
+    <section class="section-pad" style="background: var(--background-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="container">
+        <div class="section-header">
+          <div class="eyebrow">Advanced Analytics</div>
+          <h2>Compare Players and Teams Side by Side</h2>
+          <p class="lead">Drop in any two players or teams to see the deltas that actually matter.</p>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-selectors">
+            <div class="select">
+              <div>
+                <small>Select First</small>
+                <div>Jordan Smith</div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+            <div class="select">
+              <div>
+                <small>Select Second</small>
+                <div>Marcus Johnson</div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+
+          <div class="compare-row">
+            <div class="compare-head"><span class="metric">Points Per Game</span><span class="delta up">+6.2 (+50.4%)</span></div>
+            <div class="bar-pair"><div class="bar"><span>Jordan Smith</span><span>18.5</span></div><div class="bar"><span>Marcus Johnson</span><span>12.3</span></div></div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-head"><span class="metric">Rebounds Per Game</span><span class="delta up">+2.1 (+41.2%)</span></div>
+            <div class="bar-pair"><div class="bar"><span>Jordan Smith</span><span>7.2</span></div><div class="bar"><span>Marcus Johnson</span><span>5.1</span></div></div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-head"><span class="metric">Assists Per Game</span><span class="delta down">-4.1 (-50.0%)</span></div>
+            <div class="bar-pair"><div class="bar"><span>Jordan Smith</span><span>4.1</span></div><div class="bar"><span>Marcus Johnson</span><span>8.2</span></div></div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-head"><span class="metric">Field Goal %</span><span class="delta up">+3.1 (+6.9%)</span></div>
+            <div class="bar-pair"><div class="bar"><span>Jordan Smith</span><span>48.2</span></div><div class="bar"><span>Marcus Johnson</span><span>45.1</span></div></div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-head"><span class="metric">Three Point %</span><span class="delta down">-1.7 (-4.4%)</span></div>
+            <div class="bar-pair"><div class="bar"><span>Jordan Smith</span><span>36.8</span></div><div class="bar"><span>Marcus Johnson</span><span>38.5</span></div></div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-head"><span class="metric">Free Throw %</span><span class="delta down">-2.6 (-3.5%)</span></div>
+            <div class="bar-pair"><div class="bar"><span>Jordan Smith</span><span>72.4</span></div><div class="bar"><span>Marcus Johnson</span><span>75.0</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STREAMING + HIGHLIGHTS ===== -->
+    <section id="streaming" class="section-pad">
+      <div class="container">
+        <div class="section-header">
+          <div class="demo-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            LIVE STREAMING &amp; HIGHLIGHTS
+          </div>
+          <h2>Watch Games Live, Anytime, Anywhere</h2>
+          <p class="lead">High-quality live streaming with instant highlights. Never miss a moment of the action.</p>
+        </div>
+
+        <div class="stream-grid">
+          <div class="stream-card">
+            <div class="video-mock">
+              <div class="video-live"><span class="live-tag">LIVE</span></div>
+              <button class="play-btn" aria-label="Play">
+                <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+              </button>
+              <div class="video-caption">
+                <h3>Eagles vs Panthers</h3>
+                <p>Championship Game • Q3 5:32</p>
+              </div>
+            </div>
+            <div class="stream-body">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 0.75rem;">
+                <h3>Live Game Streaming</h3>
+                <button class="btn btn-ghost btn-sm" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download App
+                </button>
+              </div>
+              <p>Watch games in real time with multi-camera angles, instant replays, and professional commentary.</p>
+              <div class="stream-actions">
+                <button class="btn btn-primary btn-sm" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                  Watch Live
+                </button>
+                <button class="btn btn-ghost btn-sm" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3v4"/><path d="M8 3v4"/></svg>
+                  View Archive
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlights-card">
+            <h3>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+              Instant Highlights
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--muted-foreground); line-height: 1.6; margin-bottom: 1rem;">
+              AI-powered highlight generation creates the best moments automatically. Share instantly on social media.
+            </p>
+            <div class="highlight-list">
+              <div class="highlight">
+                <div class="thumb"></div>
+                <div>
+                  <h4>Game-Winning Three Pointer</h4>
+                  <div class="meta">1,250 views</div>
+                </div>
+                <div class="dur">0:15</div>
+              </div>
+              <div class="highlight">
+                <div class="thumb"></div>
+                <div>
+                  <h4>Amazing Alley-Oop Dunk</h4>
+                  <div class="meta">980 views</div>
+                </div>
+                <div class="dur">0:12</div>
+              </div>
+              <div class="highlight">
+                <div class="thumb"></div>
+                <div>
+                  <h4>Clutch Free Throws</h4>
+                  <div class="meta">750 views</div>
+                </div>
+                <div class="dur">0:18</div>
+              </div>
+              <div class="highlight">
+                <div class="thumb"></div>
+                <div>
+                  <h4>Defensive Block</h4>
+                  <div class="meta">620 views</div>
+                </div>
+                <div class="dur">0:10</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOR ORGANIZERS ===== -->
+    <section id="organizers" class="audience-section" style="background: var(--background-alt); border-top: 1px solid var(--border);">
+      <div class="container">
+        <div class="section-header">
+          <div class="eyebrow">For Tournament Organizers</div>
+          <h2>Everything You Need to Run Successful Tournaments</h2>
+          <p class="lead">Powerful tools to manage every aspect of your tournament from registration to championship.</p>
+        </div>
+
+        <div class="feat-grid">
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6"/><path d="M19 8v6"/></svg></div>
+            <h3>Team Registration</h3>
+            <p>Streamlined registration with automated team management and roster verification.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <h3>Smart Scheduling</h3>
+            <p>Automated bracket generation and scheduling with conflict detection and optimization.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg></div>
+            <h3>Bracket Management</h3>
+            <p>Interactive brackets with real-time updates and automatic progression tracking.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-6"/></svg></div>
+            <h3>Analytics Dashboard</h3>
+            <p>Comprehensive analytics including attendance, engagement, and performance metrics.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+            <h3>Custom Configuration</h3>
+            <p>Fully customizable tournament settings, rules, and scoring systems.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+            <h3>Payment Processing</h3>
+            <p>Integrated payment system for registration fees and ticket sales.</p>
+          </div>
+        </div>
+
+        <div class="spotlight">
+          <div class="spotlight-body">
+            <h3>Tournament Dashboard</h3>
+            <p>Get a complete overview of your tournament at a glance. Monitor registrations, track game progress, and manage everything from one central dashboard.</p>
+            <ul class="check-list">
+              <li>Real-time registration tracking</li>
+              <li>Automated bracket generation</li>
+              <li>Live game status updates</li>
+              <li>Revenue and attendance analytics</li>
+            </ul>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-grid">
+              <div class="kpi"><div class="k">Total Teams</div><div class="v accent">32</div></div>
+              <div class="kpi"><div class="k">Games Completed</div><div class="v">12/31</div></div>
+              <div class="kpi"><div class="k">Live Games</div><div class="v accent">3</div></div>
+              <div class="kpi"><div class="k">Total Revenue</div><div class="v">$48.2k</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOR COACHES ===== -->
+    <section class="audience-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="eyebrow">For Coaches</div>
+          <h2>Data-Driven Coaching Decisions</h2>
+          <p class="lead">Make informed decisions with real-time stats, player analytics, and comprehensive game insights.</p>
+        </div>
+
+        <div class="feat-grid">
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></div>
+            <h3>Player Performance Tracking</h3>
+            <p>Track individual player stats across all games with detailed analytics and trends.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg></div>
+            <h3>Team Analytics</h3>
+            <p>Comprehensive team statistics including shooting percentages, turnovers, and efficiency metrics.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <h3>Roster Management</h3>
+            <p>Manage your team roster, track player availability, and plan lineups.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg></div>
+            <h3>Game Preparation</h3>
+            <p>Access opponent scouting reports, game plans, and preparation tools.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <h3>Advanced Metrics</h3>
+            <p>Deep dive into advanced analytics like PER, true shooting percentage, and pace.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+            <h3>Game Film Analysis</h3>
+            <p>Review game footage with timestamped highlights and play-by-play breakdowns.</p>
+          </div>
+        </div>
+
+        <div class="spotlight">
+          <div class="kpi-card">
+            <h3 style="margin-bottom: 1rem;">Team Overview</h3>
+            <div class="kpi-grid">
+              <div class="kpi"><div class="k">Wins</div><div class="v accent">18</div></div>
+              <div class="kpi"><div class="k">Losses</div><div class="v">4</div></div>
+              <div class="kpi"><div class="k">PPG</div><div class="v">76.4</div></div>
+              <div class="kpi"><div class="k">RPG</div><div class="v">38.2</div></div>
+            </div>
+            <div class="chart-card" style="margin-top: 1.25rem; padding: 1.1rem;">
+              <h3 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-foreground); margin-bottom: 0.75rem;">Points Per Game Trend</h3>
+              <div class="chart">
+                <div class="bar-v" style="height: 55%"></div>
+                <div class="bar-v" style="height: 68%"></div>
+                <div class="bar-v" style="height: 48%"></div>
+                <div class="bar-v" style="height: 82%"></div>
+                <div class="bar-v" style="height: 74%"></div>
+              </div>
+              <div class="chart-x"><span>G1</span><span>G2</span><span>G3</span><span>G4</span><span>G5</span></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h3>Advanced Efficiency Metrics — Team Average</h3>
+            <div class="metric-row"><span class="name">PER (Player Efficiency Rating)</span><span class="val">18.5</span></div>
+            <div class="progress"><span style="width: 74%"></span></div>
+            <div class="metric-row"><span class="name">TS% (True Shooting %)</span><span class="val">58.2</span></div>
+            <div class="progress"><span style="width: 58%"></span></div>
+            <div class="metric-row"><span class="name">Pace</span><span class="val">72.3</span></div>
+            <div class="progress"><span style="width: 72%"></span></div>
+            <div class="metric-row"><span class="name">Offensive Rating</span><span class="val">112.5</span></div>
+            <div class="progress"><span style="width: 82%"></span></div>
+            <div class="metric-row"><span class="name">Defensive Rating</span><span class="val">44.8</span></div>
+            <div class="progress"><span style="width: 45%"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOR PARENTS ===== -->
+    <section class="audience-section" style="background: var(--background-alt);">
+      <div class="container">
+        <div class="section-header">
+          <div class="eyebrow">For Parents</div>
+          <h2>Stay Connected to Every Game</h2>
+          <p class="lead">Watch your player compete live, get instant updates, and share their achievements with family and friends.</p>
+        </div>
+
+        <div class="feat-grid">
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+            <h3>Mobile-First Experience</h3>
+            <p>Watch games and check stats from anywhere with our intuitive mobile app.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+            <h3>Live Game Viewing</h3>
+            <p>Never miss a game with live streaming and instant notifications when games start.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg></div>
+            <h3>Player Highlights</h3>
+            <p>Automatically generated highlights featuring your player's best moments.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+            <h3>Real-Time Updates</h3>
+            <p>Get instant notifications for scores, game starts, and important updates.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg></div>
+            <h3>Player Stats</h3>
+            <p>Track your player's performance with detailed statistics and progress over time.</p>
+          </div>
+          <div class="feat-card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div>
+            <h3>Easy Sharing</h3>
+            <p>Share highlights and achievements on social media with one tap.</p>
+          </div>
+        </div>
+
+        <div class="spotlight">
+          <div class="spotlight-body">
+            <h3>Everything You Need in Your Pocket</h3>
+            <p>Our mobile app puts the entire tournament experience at your fingertips. Watch live games, check scores, view highlights, and track your player's stats — all from your phone.</p>
+            <ul class="check-list">
+              <li>Live game streaming with DVR controls</li>
+              <li>Push notifications for game starts and scores</li>
+              <li>Player highlight reels automatically generated</li>
+              <li>Social sharing for achievements and moments</li>
+              <li>Offline viewing of recorded games</li>
+            </ul>
+          </div>
+          <div class="phone">
+            <div class="screen">
+              <div class="phone-title">
+                <span class="t">Live Game</span>
+                <span class="live-tag">LIVE</span>
+              </div>
+              <div class="phone-score">
+                <div class="phone-team"><div class="tn">Eagles</div><div class="ts">42</div></div>
+                <div class="phone-team"><div class="tn">Panthers</div><div class="ts">38</div></div>
+              </div>
+              <div class="phone-row"><span>Q3</span><span>5:32</span></div>
+              <div class="phone-row"><span>#23 Jordan Smith</span><span class="v">18 PTS</span></div>
+              <div class="phone-row"><span>Highlights</span><span class="v">12 clips</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FINAL CTA ===== -->
+    <section id="cta" class="final-cta">
+      <div class="container inner">
+        <h2>Ready to Transform Your Tournament Experience?</h2>
+        <p>Join leading tournaments using Sports Data Collective for real-time stats, live streaming, and comprehensive analytics.</p>
+        <div class="cta-row">
+          <a href="mailto:info@sportsdatacollective.com" class="btn btn-primary">
+            Learn More
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
       </div>
     </section>
   </main>
 
+  <!-- ===== FOOTER ===== -->
   <footer class="site-footer">
-    <a href="privacy_policy.html">Privacy Policy</a>
-    <span class="separator">|</span>
-    <a href="terms_of_service.html">Terms of Service</a>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <div class="brand">
+            <span class="brand-mark">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>
+            </span>
+            <span class="brand-name">Sports Data <span>Collective</span></span>
+          </div>
+          <p>Reimagining the basketball tournament experience with real-time stats, live streaming, and AI-powered highlights — built for organizers, coaches, and parents.</p>
+          <a class="email" href="mailto:info@sportsdatacollective.com">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            info@sportsdatacollective.com
+          </a>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#live-stats">Live Stats</a></li>
+            <li><a href="#streaming">Streaming</a></li>
+            <li><a href="#organizers">Organizers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#cta">Contact Us</a></li>
+            <li><a href="privacy_policy.html">Privacy Policy</a></li>
+            <li><a href="terms_of_service.html">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Sports Data Collective. All rights reserved.</span>
+        <span class="separator">|</span>
+        <a href="privacy_policy.html">Privacy Policy</a>
+        <span class="separator">|</span>
+        <a href="terms_of_service.html">Terms of Service</a>
+      </div>
+    </div>
   </footer>
 </body>
 </html>
